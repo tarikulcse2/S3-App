@@ -1,0 +1,234 @@
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+    <a class="navbar-brand" routerLink="/" >S3 Assignment</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#tradeModal" [routerLink]="" (click)="add()">
+              Create Trade</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Modal -->
+  <div id="tradeModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <form [formGroup]="tradeFrom" (ngSubmit)="onSubmit()">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="trade">Trade</label>
+                        <select id="trade" formControlName="tradeId" class="form-control" (change)="tradeChange($event)">
+                          <option *ngFor="let key of tradeKeys" [value]="key">{{trades[key]}}</option>
+                        </select>
+                        <div
+                          *ngIf="tradeFrom.controls['tradeId'].invalid && (tradeFrom.controls['tradeId'].dirty || tradeFrom.controls['tradeId'].touched)"
+                          class="alert alert-danger">
+              
+                          <div *ngIf="tradeFrom.controls['tradeId'].errors.required">
+                            Trade is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="lvl">Level</label>
+                        <select id="lvl" formControlName="level" class="form-control">
+                          <option *ngFor="let lvl of levelList" [value]="lvl.id">{{lvl.name}}</option>
+                        </select>
+                        <div
+                          *ngIf="tradeFrom.controls['level'].invalid && (tradeFrom.controls['level'].dirty || tradeFrom.controls['level'].touched)"
+                          class="alert alert-danger">
+              
+                          <div *ngIf="tradeFrom.controls['level'].errors.required">
+                            Level is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            
+                  </div>
+
+                  <div class="form-group">
+                      <label for="lng">Language</label>
+                      <div formArrayName="langs">
+                        <div>
+                            <label style="margin-right: 4px;" 
+                            *ngFor="let ln of tradeFrom.controls.langs.controls; let i = index;">
+                              <input type="checkbox" [formControlName]="i" (change)="checkedAdd($event)"
+                                [value]="languageList[i].value">
+                              {{languageList[i].name}}
+                            </label>
+                        </div>
+                      </div>
+                    </div>
+              
+              
+              
+                  <div class="form-group">
+                    <label>Syllabus Name</label>
+                    <input type="text" formControlName="syllabusName" class="form-control" placeholder="Enter Syllabus Name">
+                    <div *ngIf="tradeFrom.controls.syllabusName.invalid && (tradeFrom.controls.syllabusName.dirty || 
+                      tradeFrom.controls.syllabusName.touched)" class="alert alert-danger">
+              
+                      <div *ngIf="tradeFrom.controls.syllabusName.errors.required">
+                        Syllabus Name is required.
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div class="form-group">
+                    <label>Upload Syllabus</label>
+                    <input (change)="fileSullbusAdd($event)" style="padding: 2px;" type="file" class="form-control">
+                  </div>
+              
+                  <div class="form-group">
+                    <label>Upload Test Plan</label>
+                    <input (change)="filePlanAdd($event)" style="padding: 2px;" type="file" class="form-control">
+                  </div>
+              
+                  <div class="form-group">
+                    <label>Development Offer</label>
+                    <input type="text" formControlName="devOffer" class="form-control" placeholder="Enter Development Offer">
+                    <div *ngIf="tradeFrom.controls.devOffer.invalid && (tradeFrom.controls.devOffer.dirty || 
+                        tradeFrom.controls.devOffer.touched)" class="alert alert-danger">
+              
+                      <div *ngIf="tradeFrom.controls.devOffer.errors.required">
+                        Development Offer is required.
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div class="form-group">
+                    <label>Manager</label>
+                    <input type="text" formControlName="manager" class="form-control" placeholder="Enter Manager Name">
+                    <div *ngIf="tradeFrom.controls.manager.invalid && (tradeFrom.controls.manager.dirty || 
+                          tradeFrom.controls.manager.touched)" class="alert alert-danger">
+              
+                      <div *ngIf="tradeFrom.controls.manager.errors.required">
+                        Manager is required.
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div class="form-group">
+                    <label>Active Date</label>
+                    <input type="date" formControlName="activeDate" class="form-control">
+                    <div *ngIf="tradeFrom.controls.activeDate.invalid && (tradeFrom.controls.activeDate.dirty || 
+                    tradeFrom.controls.activeDate.touched)" class="alert alert-danger">
+              
+                      <div *ngIf="tradeFrom.controls.activeDate.errors.required">
+                        Active Date is required.
+                      </div>
+                    </div>
+                  </div>
+              
+                  <button type="submit" [disabled]="!tradeFrom.valid || (!syllabusFile || !planFile)" 
+                  class="btn btn-primary">{{ buttonText.text }}</button>
+                </form>
+              </div>
+              
+        </div>
+        <div class="modal-footer">
+          <p>{{message}}</p>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+<div class="container-fluid mt-2">
+  <div class="row">
+    <div class="col-md-1 text-right">Trade</div>
+    <div class="col-md-4">
+      <select id="trade" [formControl]="searchTrade" class="form-control" (change)="searchtradeChange($event)">
+        <option value="0">All</option>
+        <option *ngFor="let key of tradeKeys" [value]="key">{{trades[key]}}</option>
+      </select>
+    </div>
+    <div class="col-md-1 text-right">Level</div>
+    <div class="col-md-4">
+      <select id="lvl" [formControl]="searchLevel" class="form-control">
+        <option value="0">All</option>
+        <option *ngFor="let lvl of levelList" [value]="lvl.id">{{lvl.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-primary" (click)="search()">Search<i style="margin-left: 7px;" class="fa fa-search"></i></button></div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+        <select [formControl]="pagesize" (change)="pageChanged(config.currentPage)">
+            <option [value]="10">10</option>
+            <option [value]="15">15</option>
+            <option [value]="20">20</option>
+          </select>
+    </div>
+    <div class="col-md-10"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <td>Action</td>
+            <td>Syllabus</td>
+            <td>Trade</td>
+            <td>Level</td>
+            <td>Uploaded Syllabus</td>
+            <td>Uploaded Test Plan</td>
+            <td>Language</td>
+            <td>Last Modify By</td>
+            <td>Last Modify Date</td>
+            <td>Active Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let trade of tradeList.data | paginate: config">
+            <td><button data-toggle="modal" data-target="#tradeModal" (click)="edit(trade)"><i class="fa fa-edit"></i></button></td>
+            <td>{{trade.syllabusName}}</td>
+            <td>{{ trades[trade.tradeId]}}</td>
+            <td>{{trade.level | level : levels}}</td>
+            <td> <a [routerLink]="" (click)="download(trade.syllbusFileName)">{{trade.syllbusFileName }}</a> </td>
+            <td> <a [routerLink]="" (click)="download(trade.syllbusFileName)">{{trade.planFileName }}</a> </td>
+            <td>{{ trade.language | lng }}</td>
+            <td>{{trade.manager }}</td>
+            <td>{{trade.updateDate | date: 'dd-MM-yyyy'}}</td>
+            <td>{{trade.activeDate | date: 'dd-MM-yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      
+    </div>
+  </div>
+  <div class="row" *ngIf="tradeList.data?.length">
+    <div class="col-md-4">
+        Showing <span>{{ (config.currentPage  * pagesize.value) - (pagesize.value - 1) }}</span> to 
+        <span>{{ pagesize.value == tradeList.data.length ?  config.currentPage  * pagesize.value : config.totalItems }}</span>
+        of <span>{{ config.totalItems }}</span> Entries
+
+    </div>
+    <div class="col-md-8">
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>
