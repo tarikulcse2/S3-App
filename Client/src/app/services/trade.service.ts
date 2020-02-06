@@ -23,8 +23,8 @@ export class TradeService {
   }
 
   fileDownload(fileName: string) {
-    return this.http.get(`http://localhost:3300/api/Trade?fileName=${fileName}`,
-      { reportProgress: true, responseType: 'blob' });
+    return this.http.get(`http://localhost:3300/api/Trade/FileDownload?fileName=${fileName}`,
+      { responseType: 'blob' });
 
   }
 }

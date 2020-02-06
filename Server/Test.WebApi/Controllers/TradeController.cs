@@ -124,6 +124,8 @@ namespace Test.WebApi.Controllers
             }
             memory.Position = 0;
 
+            //return File(new FileStream(filePath, FileMode.Open), "image/jpeg"); 
+
             return File(memory, GetContentType(filePath), fileName);
         }
 
